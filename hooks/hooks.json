@@ -1,0 +1,4 @@
+{
+  "description": "claude-mod-status: banda de píldoras sobre el prompt (5h/7d, contexto, tokens) y avisos 80/95%. Necesita CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1.",
+  "modules": ["./register.tsx"]
+}

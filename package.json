@@ -1,0 +1,8 @@
+{
+  "name": "claude-mod-status",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

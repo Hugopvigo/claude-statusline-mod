@@ -1,0 +1,7 @@
+{
+  "name": "claude-mod-status",
+  "version": "0.3.0",
+  "description": "Banda de estado en píldoras sobre el prompt: límites 5h/7d con cuenta atrás, contexto y tokens ↑↓ y caché. Avisos al 80% y 95%. Necesita function hooks (acceso anticipado).",
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}
