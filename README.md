@@ -5,7 +5,7 @@ color: límites de uso de **5 horas** y **7 días** con barra y cuenta atrás,
 **contexto** y **tokens** de la sesión.
 
 ```
-(5h ▰▰▱▱▱ 20% | 2h 40m)  (7d ▰▰▰▱▱ 58% | 1d 7h)  (ctx 18%)  (↑ 15.6k)  (↓ 3.0k)  (▤ 954.2k)
+(5h ▰▰▱▱▱ 20% | 2h 40m)  (7d ▰▰▰▱▱ 58% | 1d 7h)  (ctx 18%)  (↑ 15.6k | ↓ 3.0k)  (▤ 954.2k)
 ```
 <img width="778" height="150" alt="image" src="https://github.com/user-attachments/assets/45275e2c-9abc-4270-b1ac-6053d51b91ba" />
 
@@ -19,7 +19,7 @@ color: límites de uso de **5 horas** y **7 días** con barra y cuenta atrás,
 | `5h` | % del límite de 5 horas, barra y tiempo hasta el reset | `$.session.usage().rateLimits` |
 | `7d` | % del límite semanal, barra y tiempo hasta el reset | ídem |
 | `ctx` | % de la ventana de contexto usada | `$.session.usage().context.percent` |
-| `↑` `↓` | tokens de entrada y de salida acumulados | `usage` de cada `turn.complete` |
+| `↑` `↓` | tokens de entrada y de salida acumulados (en una sola píldora) | `usage` de cada `turn.complete` |
 | `▤` | tokens de caché (lectura + escritura) | ídem |
 
 - **Marca de ritmo.** La barra de 5h y 7d lleva una marca vertical: la parte
@@ -71,7 +71,7 @@ Todo son constantes al principio de [hooks/register.tsx](hooks/register.tsx):
 | `SCALE` | `1.35` | Tamaño de la banda en escritorio (vectorial, no pierde nitidez) |
 | `TICK_MS` | `30000` | Cada cuánto se refrescan límites y cuentas atrás |
 | `WARN_AT` / `CRIT_AT` | `80` / `95` | Umbrales de color y de aviso |
-| `BAR_W`, `CW` | `46`, `7.5` | Ancho de la barra y de cada carácter del SVG |
+| `FONT`, `ICON_PX`, `CW` | `15`, `19`, `8.6` | Fuente, iconos y ancho de carácter del SVG (cambia `CW` con `FONT`: ≈ 0.57 × FONT) |
 
 ## Limitaciones
 

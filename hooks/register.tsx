@@ -122,11 +122,15 @@ async function sampleSafe($: EngineInterface): Promise<void> {
 
 // --- Dibujo SVG (escritorio) ---------------------------------------------
 
-const H = 28;
-const PAD = 11;
-const GAP = 6;
-const CW = 7.5;
-const BAR_W = 46;
+const H = 32;
+const PAD = 13;
+const GAP = 7;
+const FONT = 15;
+/** Ancho de un carácter monoespaciado a `FONT` px. */
+const CW = 8.6;
+const ICON_PX = 19;
+const BAR_W = 52;
+const BAR_H = 7;
 /** Factor de ampliación del dibujo (vectorial: no pierde nitidez). */
 const SCALE = 1.35;
 
@@ -153,7 +157,6 @@ const STYLE = `
 .a{color:#2f6f5e}.a .bg{fill:#d6e8e0}
 .p{color:#5b4fa8}.p .bg{fill:#dedaf1}
 .r{color:#b04a35}.r .bg{fill:#f3d9d2}
-.g{color:#3d7a4d}.g .bg{fill:#d7e9da}
 .b{color:#4b5fc0}.b .bg{fill:#d9def3}
 .s{color:#4f5b6a}.s .bg{fill:#e1e5ea}
 .w{color:#8a5a00}.w .bg{fill:#f6e2b8}
@@ -163,7 +166,6 @@ const STYLE = `
 .a{color:#7fd3b5}.a .bg{fill:#1c3a32}
 .p{color:#b8aef0}.p .bg{fill:#2c2750}
 .r{color:#f0a08c}.r .bg{fill:#43241d}
-.g{color:#8fd5a0}.g .bg{fill:#1d3825}
 .b{color:#a3b2f5}.b .bg{fill:#222a52}
 .s{color:#b4c0cf}.s .bg{fill:#2a3139}
 .w{color:#f2c46b}.w .bg{fill:#3d2f0e}
@@ -174,7 +176,7 @@ const STYLE = `
 const esc = (t: string): string => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 function segWidth(s: Seg): number {
-  if (s.k === 'icon') return 16;
+  if (s.k === 'icon') return ICON_PX;
   if (s.k === 'text') return CW * s.t.length;
   if (s.k === 'bar') return BAR_W;
   return 1;
@@ -182,21 +184,22 @@ function segWidth(s: Seg): number {
 
 function drawSeg(s: Seg, x: number): string {
   if (s.k === 'icon') {
-    return `<g transform="translate(${x} 6)" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${s.d}</g>`;
+    return `<g transform="translate(${x} ${(H - ICON_PX) / 2}) scale(${ICON_PX / 16})" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${s.d}</g>`;
   }
   if (s.k === 'text') {
     const w = CW * s.t.length;
-    return `<text x="${x}" y="18.3" textLength="${w}" lengthAdjust="spacingAndGlyphs" fill="currentColor" font-size="13" font-weight="${s.bold === true ? 700 : 500}">${esc(s.t)}</text>`;
+    return `<text x="${x}" y="${H / 2 + FONT * 0.35}" textLength="${w}" lengthAdjust="spacingAndGlyphs" fill="currentColor" font-size="${FONT}" font-weight="${s.bold === true ? 700 : 500}">${esc(s.t)}</text>`;
   }
   if (s.k === 'bar') {
-    const fill = Math.max(s.pct > 0 ? 3 : 0, (Math.min(100, s.pct) / 100) * BAR_W);
+    const fill = Math.max(s.pct > 0 ? BAR_H / 2 : 0, (Math.min(100, s.pct) / 100) * BAR_W);
+    const barY = (H - BAR_H) / 2;
     const tick =
       s.pace === undefined
         ? ''
-        : `<rect x="${x + Math.min(BAR_W - 2, Math.max(0, s.pace * BAR_W - 1))}" y="7" width="2" height="14" rx="1" fill="currentColor"/>`;
-    return `<rect class="track" x="${x}" y="11" width="${BAR_W}" height="6" rx="3"/><rect x="${x}" y="11" width="${fill}" height="6" rx="3" fill="${FILL[s.level]}"/>${tick}`;
+        : `<rect x="${x + Math.min(BAR_W - 2, Math.max(0, s.pace * BAR_W - 1))}" y="${barY - 3}" width="2" height="${BAR_H + 6}" rx="1" fill="currentColor"/>`;
+    return `<rect class="track" x="${x}" y="${barY}" width="${BAR_W}" height="${BAR_H}" rx="${BAR_H / 2}"/><rect x="${x}" y="${barY}" width="${fill}" height="${BAR_H}" rx="${BAR_H / 2}" fill="${FILL[s.level]}"/>${tick}`;
   }
-  return `<rect x="${x}" y="8" width="1" height="12" fill="currentColor" opacity=".25"/>`;
+  return `<rect x="${x}" y="${H / 2 - 7}" width="1" height="14" fill="currentColor" opacity=".25"/>`;
 }
 
 function drawPill(cls: string, segs: Seg[], x: number): { svg: string; w: number } {
@@ -298,8 +301,16 @@ export const register: Register = on => {
           });
         }
         if (hasTokens) {
-          pills.push({ cls: 'r', segs: [{ k: 'icon', d: ICON.up }, { k: 'text', t: shortNum(sum.input), bold: true }] });
-          pills.push({ cls: 'g', segs: [{ k: 'icon', d: ICON.down }, { k: 'text', t: shortNum(sum.output), bold: true }] });
+          pills.push({
+            cls: 'r',
+            segs: [
+              { k: 'icon', d: ICON.up },
+              { k: 'text', t: shortNum(sum.input), bold: true },
+              { k: 'div' },
+              { k: 'icon', d: ICON.down },
+              { k: 'text', t: shortNum(sum.output), bold: true },
+            ],
+          });
           pills.push({ cls: 'b', segs: [{ k: 'icon', d: ICON.layers }, { k: 'text', t: shortNum(sum.cache), bold: true }] });
         }
         if (pills.length === 0) return next(e);
@@ -318,7 +329,6 @@ export const register: Register = on => {
         warn: { fg: '#fcd34d', bg: '#3b2f0b' },
         crit: { fg: '#fca5a5', bg: '#3f1414' },
         up: { fg: '#fdba74', bg: '#3b2210' },
-        down: { fg: '#86efac', bg: '#143321' },
         cache: { fg: '#a5b4fc', bg: '#1e2554' },
       } as const;
       const pill = (key: string, t: { fg: string; bg: string }, text: string) => (
@@ -335,8 +345,7 @@ export const register: Register = on => {
         limit('5h', snap.pct5h, snap.reset5h),
         limit('7d', snap.pct7d, snap.reset7d),
         snap.contextPct === undefined ? null : pill('ctx', tone[levelOf(snap.contextPct)], `▣ ctx ${pctText(snap.contextPct)}`),
-        hasTokens ? pill('in', tone.up, `↑ ${shortNum(sum.input)}`) : null,
-        hasTokens ? pill('out', tone.down, `↓ ${shortNum(sum.output)}`) : null,
+        hasTokens ? pill('io', tone.up, `↑ ${shortNum(sum.input)} · ↓ ${shortNum(sum.output)}`) : null,
         sum.cache === 0 ? null : pill('cache', tone.cache, `▤ ${shortNum(sum.cache)}`),
       ].filter(p => p !== null);
       if (items.length === 0) return next(e);
