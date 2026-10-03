@@ -7,6 +7,7 @@ color: límites de uso de **5 horas** y **7 días** con barra y cuenta atrás,
 ```
 (5h ▰▰▱▱▱ 20% | 2h 40m)  (7d ▰▰▰▱▱ 58% | 1d 7h)  (ctx 18%)  (↑ 15.6k)  (↓ 3.0k)  (▤ 954.2k)
 ```
+<img width="778" height="150" alt="image" src="https://github.com/user-attachments/assets/45275e2c-9abc-4270-b1ac-6053d51b91ba" />
 
 > Proyecto no oficial. Usa los *function hooks* de Claude Code, que son de
 > acceso anticipado: su API puede cambiar sin aviso.
