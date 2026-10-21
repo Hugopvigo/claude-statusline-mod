@@ -1,3 +1,7 @@
+<meta property="og:title" content="CLAUDE-STATUSLINE-MOD">
+<meta property="og:description" content="Una banda de estado sobre el prompt de Claude Code, en píldoras de color.">
+<meta property="og:image" content="https://raw.githubusercontent.com/Hugopvigo/claude-statusline-mod/main/docs/capturas/og.png">
+
 <p align="center">
   <img src="docs/capturas/00-cabecera.png" alt="claude-statusline-mod — banda de estado en píldoras para Claude Code" width="100%">
 </p>
